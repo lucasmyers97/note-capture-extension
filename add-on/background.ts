@@ -1,7 +1,7 @@
 /*
 On startup, connect to the "ping_pong" app.
 */
-let native_port = browser.runtime.connectNative("ping_pong");
+let native_port = browser.runtime.connectNative("org_capture");
 
 /*
 Listen for messages from the app and log them to the console.
