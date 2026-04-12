@@ -68,6 +68,7 @@ browser.menus.onClicked.addListener((info, _) => {
 When the extension's action icon is clicked, send the app a message.
 */
 browser.browserAction.onClicked.addListener(() => {
-  console.log("Sending:  ping");
-  port.postMessage("ping");
+  // console.log("Sending:  ping");
+  // port.postMessage("ping");
+  browser.runtime.openOptionsPage();
 });

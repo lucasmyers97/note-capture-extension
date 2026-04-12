@@ -6,7 +6,10 @@ Other than that it is fairly straightforward.
 
 ## TODO
 
-- [ ] Figure out how to save data in an extension
+- [X] Figure out how to save data in an extension
+- [X] Figure out how to create a settings page
+- [ ] Create appropriate settings page (with the things one would need for the extension)
+- [ ] Make extensions page pretty
 - [ ] Create extension menu (for saving metadata, save filepath, etc.)
 - [ ] Figure out how to create popup prompt for user
 - [ ] Send org template through
