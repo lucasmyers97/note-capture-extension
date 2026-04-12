@@ -19,7 +19,8 @@
   },
 
   "browser_action": {
-    "default_icon": "icons/message.svg"
+    "default_icon": "icons/message.svg",
+    "default_popup": "prompt.html"
   },
 
   "options_ui": {
