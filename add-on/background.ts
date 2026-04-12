@@ -1,19 +1,19 @@
 /*
-On startup, connect to the "ping_pong" app.
+On startup, connect to the "org_capture" app.
 */
-let native_port = browser.runtime.connectNative("org_capture");
+let port = browser.runtime.connectNative("org_capture");
 
 /*
 Listen for messages from the app and log them to the console.
 */
-native_port.onMessage.addListener((response) => {
+port.onMessage.addListener((response) => {
   console.log("Received: " + response);
 });
 
 /*
 Listen for the native messaging port closing.
 */
-native_port.onDisconnect.addListener((port) => {
+port.onDisconnect.addListener((port) => {
   if (port.error) {
     console.log(`Disconnected due to an error: ${port.error.message}`);
   } else {
@@ -25,10 +25,33 @@ native_port.onDisconnect.addListener((port) => {
   }
 });
 
+function onCreated() {
+  if (browser.runtime.lastError) {
+    console.log(`Error: ${browser.runtime.lastError}`);
+  } else {
+    console.log("Item created successfully");
+  }
+}
+
+browser.menus.create({
+  id: "log-selection",
+  title: "Log selected text",
+  contexts: ["selection"]
+}, onCreated);
+
+
+browser.menus.onClicked.addListener((info, _) => {
+  if (info.menuItemId == "log-selection") {
+    port.postMessage(info.selectionText);
+  }
+});
+
+
+
 /*
 When the extension's action icon is clicked, send the app a message.
 */
 browser.browserAction.onClicked.addListener(() => {
   console.log("Sending:  ping");
-  native_port.postMessage("ping");
+  port.postMessage("ping");
 });
