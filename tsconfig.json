@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
-        "types": ["firefox-webext-browser"] 
+        "lib": ["ES2015", "dom"],
+        "types": ["firefox-webext-browser"]
     }
 }

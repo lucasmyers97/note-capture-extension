@@ -36,9 +36,24 @@ browser.menus.create({
     title: "Log selected text",
     contexts: ["selection"]
 }, onCreated);
+function onError(error) {
+    console.log("Error: ".concat(error));
+}
+function onGot(item) {
+    var color = "blue";
+    if (item.color) {
+        color = item.color;
+    }
+    console.log("Color: ".concat(color));
+}
+var getting = browser.storage.sync.get("color");
+getting.then(onGot, onError);
 browser.menus.onClicked.addListener(function (info, _) {
     if (info.menuItemId == "log-selection") {
         port.postMessage(info.selectionText);
+        console.log(info.selectionText);
+        var getting_1 = browser.storage.sync.get("color");
+        getting_1.then(onGot, onError);
     }
 });
 /*

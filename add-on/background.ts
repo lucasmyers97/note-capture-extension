@@ -39,14 +39,30 @@ browser.menus.create({
   contexts: ["selection"]
 }, onCreated);
 
+function onError(error: Error) {
+  console.log(`Error: ${error}`);
+}
+
+function onGot(item: any) {
+  let color = "blue";
+  if (item.color) {
+    color = item.color;
+  }
+  console.log(`Color: ${color}`);
+}
+
+const getting = browser.storage.sync.get("color");
+getting.then(onGot, onError);
 
 browser.menus.onClicked.addListener((info, _) => {
   if (info.menuItemId == "log-selection") {
     port.postMessage(info.selectionText);
+    console.log(info.selectionText);
+
+    const getting = browser.storage.sync.get("color");
+    getting.then(onGot, onError);
   }
 });
-
-
 
 /*
 When the extension's action icon is clicked, send the app a message.
