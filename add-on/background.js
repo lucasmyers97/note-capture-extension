@@ -40,19 +40,19 @@ function onError(error) {
     console.log("Error: ".concat(error));
 }
 function onGot(item) {
-    var color = "blue";
-    if (item.color) {
-        color = item.color;
+    var filepath = "blue";
+    if (item.filepath) {
+        filepath = item.filepath;
     }
-    console.log("Color: ".concat(color));
+    console.log("Filepath: ".concat(filepath));
 }
-var getting = browser.storage.sync.get("color");
+var getting = browser.storage.sync.get("filepath");
 getting.then(onGot, onError);
 browser.menus.onClicked.addListener(function (info, _) {
     if (info.menuItemId == "log-selection") {
         port.postMessage(info.selectionText);
         console.log(info.selectionText);
-        var getting_1 = browser.storage.sync.get("color");
+        var getting_1 = browser.storage.sync.get("filepath");
         getting_1.then(onGot, onError);
     }
 });

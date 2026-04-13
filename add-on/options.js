@@ -1,17 +1,17 @@
 function saveOptions(e) {
     e.preventDefault();
     browser.storage.sync.set({
-        color: document.querySelector("#color").value,
+        filepath: document.querySelector("#filepath").value,
     });
 }
 function restoreOptions() {
     function setCurrentChoice(result) {
-        document.querySelector("#color").value = result.color || "blue";
+        document.querySelector("#filepath").value = result.filepath || "~/";
     }
     function onError(error) {
         console.log("Error: ".concat(error));
     }
-    var getting = browser.storage.sync.get("color");
+    var getting = browser.storage.sync.get("filepath");
     getting.then(setCurrentChoice, onError);
 }
 document.addEventListener("DOMContentLoaded", restoreOptions);

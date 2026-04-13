@@ -44,14 +44,14 @@ function onError(error: Error) {
 }
 
 function onGot(item: any) {
-  let color = "blue";
-  if (item.color) {
-    color = item.color;
+  let filepath = "No filepath";
+  if (item.filepath) {
+    filepath = item.filepath;
   }
-  console.log(`Color: ${color}`);
+  console.log(`Filepath: ${filepath}`);
 }
 
-const getting = browser.storage.sync.get("color");
+const getting = browser.storage.sync.get("filepath");
 getting.then(onGot, onError);
 
 browser.menus.onClicked.addListener((info, _) => {
@@ -59,7 +59,7 @@ browser.menus.onClicked.addListener((info, _) => {
     port.postMessage(info.selectionText);
     console.log(info.selectionText);
 
-    const getting = browser.storage.sync.get("color");
+    const getting = browser.storage.sync.get("filepath");
     getting.then(onGot, onError);
   }
 });
