@@ -1,28 +1,3 @@
-/*
-On startup, connect to the "org_capture" app.
-*/
-var port = browser.runtime.connectNative("org_capture");
-/*
-Listen for messages from the app and log them to the console.
-*/
-port.onMessage.addListener(function (response) {
-    console.log("Received: " + response);
-});
-/*
-Listen for the native messaging port closing.
-*/
-port.onDisconnect.addListener(function (port) {
-    if (port.error) {
-        console.log("Disconnected due to an error: ".concat(port.error.message));
-    }
-    else {
-        // The port closed for an unspecified reason. If this occurred right after
-        // calling `browser.runtime.connectNative()` there may have been a problem
-        // starting the native messaging client in the first place.
-        // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging#troubleshooting
-        console.log("Disconnected", port);
-    }
-});
 function onCreated() {
     if (browser.runtime.lastError) {
         console.log("Error: ".concat(browser.runtime.lastError));
@@ -31,16 +6,11 @@ function onCreated() {
         console.log("Item created successfully");
     }
 }
-browser.menus.create({
-    id: "log-selection",
-    title: "Log selected text",
-    contexts: ["selection"]
-}, onCreated);
 function onError(error) {
     console.log("Error: ".concat(error));
 }
 function onGot(item) {
-    var filepath = "blue";
+    var filepath = "No filepath";
     if (item.filepath) {
         filepath = item.filepath;
     }
@@ -48,19 +18,41 @@ function onGot(item) {
 }
 var getting = browser.storage.sync.get("filepath");
 getting.then(onGot, onError);
-browser.menus.onClicked.addListener(function (info, _) {
+var port = browser.runtime.connectNative("org_capture");
+port.onMessage.addListener(function (response) {
+    console.log("Received: " + response);
+});
+port.onDisconnect.addListener(function (port) {
+    if (port.error) {
+        console.log("Disconnected due to an error: ".concat(port.error.message));
+    }
+    else {
+        console.log("Disconnected", port);
+    }
+});
+/*
+ *
+ */
+browser.menus.onClicked.addListener(function (info, tab) {
     if (info.menuItemId == "log-selection") {
         port.postMessage(info.selectionText);
         console.log(info.selectionText);
         var getting_1 = browser.storage.sync.get("filepath");
         getting_1.then(onGot, onError);
+        console.log("Title: ".concat(tab === null || tab === void 0 ? void 0 : tab.title));
+        //const title = browser.browserAction.getTitle({tabId: tab?.id});
+        //title.then(title_text => {
+        //  console.log(`Title: ${title_text}`);
+        //});
     }
 });
-/*
-When the extension's action icon is clicked, send the app a message.
-*/
 browser.browserAction.onClicked.addListener(function () {
     // console.log("Sending:  ping");
     // port.postMessage("ping");
     browser.runtime.openOptionsPage();
 });
+browser.menus.create({
+    id: "log-selection",
+    title: "Log selected text",
+    contexts: ["selection"]
+}, onCreated);

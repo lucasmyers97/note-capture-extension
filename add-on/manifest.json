@@ -28,5 +28,5 @@
     "open_in_tab": true
   },
 
-  "permissions": ["nativeMessaging", "menus", "storage"]
+  "permissions": ["nativeMessaging", "menus", "storage", "tabs"]
 }
