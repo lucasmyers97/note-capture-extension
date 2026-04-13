@@ -6,6 +6,11 @@ Other than that it is fairly straightforward.
 
 ## TODO
 
+- [ ] Output highlights to org files
+  - [ ] Hardcode template with highlight content, title, and author
+  - [ ] Send to Python in some readable context (json?)
+  - [ ] Have Python write or append an org file based on that data
+
 - [X] Figure out how to save data in an extension
 - [X] Figure out how to create a settings page
 - [ ] Create appropriate settings page (with the things one would need for the extension)
@@ -16,3 +21,21 @@ Other than that it is fairly straightforward.
 - [ ] Figure out what the one guy uses as metadata for literature notes
   - [Here's the link](https://gist.github.com/0atman/29daa5676a39388006e6c2e73e60f479)
 - [ ] Figure out how to read webpage metadata with extension
+
+## Structure
+- Main extension
+  - Menu option when highlighting text on screen 
+  - Popup (?) prompting user for additional note on reference material
+  - Grab metadata from document
+  - Process highlight, user text, and metadata into note + filename
+  - Send info to external program
+- Options page
+  - Create (nice-looking) page for user to specify option
+  - Have fields specifying how the text should be output
+  - Deal with logic of saving user preferences
+- Prompt
+  - Prompt users to open settings page
+- Python script
+  - Receive note text
+  - Create new file or find file to write to
+  - Depending on whether file is new or not, create title matter, or just append
