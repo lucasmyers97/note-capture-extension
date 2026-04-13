@@ -42,7 +42,7 @@ browser.menus.onClicked.addListener(function (info, tab) {
         console.log("Title: ".concat(tab === null || tab === void 0 ? void 0 : tab.title));
     }
 });
-browser.browserAction.onClicked.addListener(function () {
+browser.action.onClicked.addListener(function () {
     // console.log("Sending:  ping");
     // port.postMessage("ping");
     browser.runtime.openOptionsPage();

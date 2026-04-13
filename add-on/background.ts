@@ -51,7 +51,7 @@ browser.menus.onClicked.addListener((info, tab) => {
   }
 });
 
-browser.browserAction.onClicked.addListener(() => {
+browser.action.onClicked.addListener(() => {
   // console.log("Sending:  ping");
   // port.postMessage("ping");
   browser.runtime.openOptionsPage();
