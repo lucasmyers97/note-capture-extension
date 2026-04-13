@@ -35,15 +35,11 @@ port.onDisconnect.addListener(function (port) {
  */
 browser.menus.onClicked.addListener(function (info, tab) {
     if (info.menuItemId == "log-selection") {
-        port.postMessage(info.selectionText);
+        port.postMessage({ title: tab === null || tab === void 0 ? void 0 : tab.title, text: info.selectionText });
         console.log(info.selectionText);
         var getting_1 = browser.storage.sync.get("filepath");
         getting_1.then(onGot, onError);
         console.log("Title: ".concat(tab === null || tab === void 0 ? void 0 : tab.title));
-        //const title = browser.browserAction.getTitle({tabId: tab?.id});
-        //title.then(title_text => {
-        //  console.log(`Title: ${title_text}`);
-        //});
     }
 });
 browser.browserAction.onClicked.addListener(function () {

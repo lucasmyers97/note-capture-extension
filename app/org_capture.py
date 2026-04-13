@@ -4,6 +4,8 @@ import sys
 import json
 import struct
 
+from tkinter import messagebox
+
 # Read a message from stdin and decode it.
 def getMessage():
     rawLength = sys.stdin.buffer.read(4)
@@ -32,5 +34,6 @@ def sendMessage(encodedMessage):
 
 while True:
     receivedMessage = getMessage()
+    messagebox.showinfo(receivedMessage['title'], receivedMessage['text'])
     if receivedMessage == "ping":
         sendMessage(encodeMessage("pong"))

@@ -41,7 +41,7 @@ port.onDisconnect.addListener((port) => {
 
 browser.menus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "log-selection") {
-    port.postMessage(info.selectionText);
+    port.postMessage({title: tab?.title, text: info.selectionText});
     console.log(info.selectionText);
 
     const getting = browser.storage.sync.get("filepath");
