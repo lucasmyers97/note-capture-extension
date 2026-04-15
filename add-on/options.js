@@ -9,9 +9,9 @@ function restoreOptions() {
         document.querySelector("#filepath").value = result.filepath || "~/";
     }
     function onError(error) {
-        console.log("Error: ".concat(error));
+        console.log(`Error: ${error}`);
     }
-    var getting = browser.storage.sync.get("filepath");
+    let getting = browser.storage.sync.get("filepath");
     getting.then(setCurrentChoice, onError);
 }
 document.addEventListener("DOMContentLoaded", restoreOptions);

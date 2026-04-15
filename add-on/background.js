@@ -1,52 +1,78 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-var nunjucks = require("./nunjucks.js");
-var res = nunjucks.renderString('Hello {{ username }}', { username: 'James' });
+// import { Liquid } from 'liquidjs'
+// import * as liquid from './liquid.js'
+// @ts-ignore
+const Liquid = window.liquidjs.Liquid;
+// const filename_template = '{{title|replace:",","_"|replace:":","_"|replace:"/","_"|replace:"\n","_"|replace:" ","_"|replace:"|","_"}}'
+// const filename_template = "{{title}}"
+const filename_template = '{{ title | slugify: "latin" | replace: "-" , "_" }}';
+const frontmatter_template = `#+title: {{ title }}{% if author %}
+#+author: {{ author }}{% endif %}
+#+date: {{ date }}{% if url %}
+#+url: {{ url }}{% endif %}`;
+const highlights_template = `* {{ highlight_text | replace('\n', ' ') | truncate(200,false,'') }}
+  - {{ highlight_text | replace('\n', ' ')  }}{% if highlight_note %}
+  - Note: {{ highlight_note | replace('\n', '')  }}{% endif %}`;
+const engine = new Liquid();
+const filename_tpl = engine.parse(filename_template);
+// const filename_compiled = nunjucks.compile(filename_template);
+// const frontmatter_compiled = nunjucks.compile(frontmatter_template);
+// const highlights_compiled = nunjucks.compile(highlights_template);
 function onCreated() {
     if (browser.runtime.lastError) {
-        console.log("Error: ".concat(browser.runtime.lastError));
+        console.log(`Error: ${browser.runtime.lastError}`);
     }
     else {
         console.log("Item created successfully");
     }
 }
 function onError(error) {
-    console.log("Error: ".concat(error));
+    console.log(`Error: ${error}`);
 }
 function onGot(item) {
-    var filepath = "No filepath";
+    let filepath = "No filepath";
     if (item.filepath) {
         filepath = item.filepath;
     }
-    console.log("Filepath: ".concat(filepath));
+    console.log(`Filepath: ${filepath}`);
 }
-var getting = browser.storage.sync.get("filepath");
+const getting = browser.storage.sync.get("filepath");
 getting.then(onGot, onError);
-var port = browser.runtime.connectNative("org_capture");
-port.onMessage.addListener(function (response) {
+const port = browser.runtime.connectNative("org_capture");
+port.onMessage.addListener((response) => {
     console.log("Received: " + response);
 });
-port.onDisconnect.addListener(function (port) {
+port.onDisconnect.addListener((port) => {
     if (port.error) {
-        console.log("Disconnected due to an error: ".concat(port.error.message));
+        console.log(`Disconnected due to an error: ${port.error.message}`);
     }
     else {
-        console.log("Disconnected", port);
+        console.log(`Disconnected`, port);
     }
 });
 /*
  *
  */
-browser.menus.onClicked.addListener(function (info, tab) {
+browser.menus.onClicked.addListener((info, tab) => {
     if (info.menuItemId == "log-selection") {
+        const note_data = {
+            title: tab === null || tab === void 0 ? void 0 : tab.title,
+            url: tab === null || tab === void 0 ? void 0 : tab.url,
+            highlight_text: info.selectionText
+        };
+        engine.render(filename_tpl, note_data).then(console.log);
+        // const filename = filename_compiled.render(note_data);
+        // const frontmatter = frontmatter_compiled.render(note_data);
+        // const highlights = highlights_compiled.render(note_data);
         port.postMessage({ title: tab === null || tab === void 0 ? void 0 : tab.title, text: info.selectionText });
         console.log(info.selectionText);
-        var getting_1 = browser.storage.sync.get("filepath");
-        getting_1.then(onGot, onError);
-        console.log("Title: ".concat(tab === null || tab === void 0 ? void 0 : tab.title));
+        const getting = browser.storage.sync.get("filepath");
+        getting.then(onGot, onError);
+        // console.log(`Filename: ${filename}`);
+        // console.log(`Frontmatter: ${frontmatter}`);
+        // console.log(`Highlights: ${highlights}`);
     }
 });
-browser.action.onClicked.addListener(function () {
+browser.action.onClicked.addListener(() => {
     // console.log("Sending:  ping");
     // port.postMessage("ping");
     browser.runtime.openOptionsPage();
