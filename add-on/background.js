@@ -1,3 +1,7 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var nunjucks = require("./nunjucks.js");
+var res = nunjucks.renderString('Hello {{ username }}', { username: 'James' });
 function onCreated() {
     if (browser.runtime.lastError) {
         console.log("Error: ".concat(browser.runtime.lastError));

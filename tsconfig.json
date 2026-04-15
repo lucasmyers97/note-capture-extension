@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
         "lib": ["ES2015", "dom"],
-        "types": ["firefox-webext-browser"]
+        "types": ["nunjucks", "firefox-webext-browser"]
     }
 }

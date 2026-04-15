@@ -3,3 +3,4 @@ add-on/background.js
 node_modules/**
 package.json
 package-lock.json
+add-on/nunjucks.d.ts

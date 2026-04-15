@@ -1,3 +1,7 @@
+import * as nunjucks from './nunjucks.js' 
+
+const res = nunjucks.renderString('Hello {{ username }}', { username: 'James' });
+
 function onCreated() {
   if (browser.runtime.lastError) {
     console.log(`Error: ${browser.runtime.lastError}`);
