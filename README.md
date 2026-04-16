@@ -11,6 +11,7 @@ Other than that it is fairly straightforward.
   - [ ] Send to Python in some readable context (json?)
   - [ ] Have Python write or append an org file based on that data
 - [ ] Think about formatting titles as filenames better (eliminate non-alphanumeric letters)
+- [ ] Get "author" and other metadata from html
 
 - [X] Figure out how to save data in an extension
 - [X] Figure out how to create a settings page

@@ -5,21 +5,32 @@ const Liquid = window.liquidjs.Liquid
 
 // const filename_template = '{{title|replace:",","_"|replace:":","_"|replace:"/","_"|replace:"\n","_"|replace:" ","_"|replace:"|","_"}}'
 // const filename_template = "{{title}}"
-const filename_template = '{{ title | slugify: "latin" | replace: "-" , "_" }}'
-const frontmatter_template = `#+title: {{ title }}{% if author %}
-#+author: {{ author }}{% endif %}
+const filename_str = '{{ title | slugify: "latin" | replace: "-" , "_" }}'
+const frontmatter_str = `#+title: {{ title }}
 #+date: {{ date }}{% if url %}
 #+url: {{ url }}{% endif %}`
-const highlights_template = `* {{ highlight_text | replace('\n', ' ') | truncate(200,false,'') }}
-  - {{ highlight_text | replace('\n', ' ')  }}{% if highlight_note %}
-  - Note: {{ highlight_note | replace('\n', '')  }}{% endif %}`
+const highlights_str = `* {{ highlight_text | replace: '\n' : ' ' | truncate: 200 , "" | split: " " | pop | join: " " }}
+  - {{ highlight_text | replace: '\n' , ' '  }}{% if highlight_note %}
+  - Note: {{ highlight_note | replace: '\n' , ' ' }}{% endif %}`
 
-const engine = new Liquid()
-const filename_tpl = engine.parse(filename_template);
+const engine = new Liquid();
+const filename_tpl = engine.parse(filename_str);
+const frontmatter_tpl = engine.parse(frontmatter_str);
+const highlights_tpl = engine.parse(highlights_str);
 
-// const filename_compiled = nunjucks.compile(filename_template);
-// const frontmatter_compiled = nunjucks.compile(frontmatter_template);
-// const highlights_compiled = nunjucks.compile(highlights_template);
+interface NoteData {
+  title: string | undefined;
+  url: string | undefined;
+  highlight_text: string | undefined;
+}
+
+async function render_note_text(note_data: NoteData) {
+  const filename = await engine.render(filename_tpl, note_data);
+  const frontmatter = await engine.render(frontmatter_tpl, note_data);
+  const highlights = await engine.render(highlights_tpl, note_data);
+
+  return {filename: filename, frontmatter: frontmatter, highlights: highlights};
+};
 
 function onCreated() {
   if (browser.runtime.lastError) {
@@ -70,21 +81,13 @@ browser.menus.onClicked.addListener((info, tab) => {
       highlight_text: info.selectionText
     };
 
-    engine.render(filename_tpl, note_data).then(console.log);
-    // const filename = filename_compiled.render(note_data);
-    // const frontmatter = frontmatter_compiled.render(note_data);
-    // const highlights = highlights_compiled.render(note_data);
-    
+    render_note_text(note_data).then(port.postMessage);
 
-    port.postMessage({title: tab?.title, text: info.selectionText});
-    console.log(info.selectionText);
+    // port.postMessage({title: tab?.title, text: info.selectionText});
+    // console.log(info.selectionText);
 
-    const getting = browser.storage.sync.get("filepath");
-    getting.then(onGot, onError);
-
-    // console.log(`Filename: ${filename}`);
-    // console.log(`Frontmatter: ${frontmatter}`);
-    // console.log(`Highlights: ${highlights}`);
+    // const getting = browser.storage.sync.get("filepath");
+    // getting.then(onGot, onError);
   }
 });
 

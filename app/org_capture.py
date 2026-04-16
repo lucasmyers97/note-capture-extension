@@ -34,6 +34,6 @@ def sendMessage(encodedMessage):
 
 while True:
     receivedMessage = getMessage()
-    messagebox.showinfo(receivedMessage['title'], receivedMessage['text'])
+    messagebox.showinfo(receivedMessage['filename'], receivedMessage['highlights'])
     if receivedMessage == "ping":
         sendMessage(encodeMessage("pong"))
