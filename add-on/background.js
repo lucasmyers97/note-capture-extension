@@ -30,7 +30,6 @@ function render_note_text(note_data) {
         const frontmatter = yield engine.render(frontmatter_tpl, note_data);
         const highlights = yield engine.render(highlights_tpl, note_data);
         return { filename: filename, frontmatter: frontmatter, highlights: highlights };
-        // return filename;
     });
 }
 ;
