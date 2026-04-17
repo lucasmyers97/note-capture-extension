@@ -1,12 +1,3 @@
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
-};
 // import { Liquid } from 'liquidjs'
 // import * as liquid from './liquid.js'
 // @ts-ignore
@@ -25,15 +16,13 @@ const filename_tpl = engine.parse(filename_str);
 const frontmatter_tpl = engine.parse(frontmatter_str);
 const highlights_tpl = engine.parse(highlights_str);
 ;
-function parseTemplates(template_strings) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let templates = Object.create(template_strings);
-        let key;
-        for (key in template_strings) {
-            templates[key] = yield engine.parse(template_strings[key]);
-        }
-        return templates;
-    });
+async function parseTemplates(template_strings) {
+    let templates = Object.create(template_strings);
+    let key;
+    for (key in template_strings) {
+        templates[key] = await engine.parse(template_strings[key]);
+    }
+    return templates;
 }
 ;
 let templates = {
@@ -42,21 +31,19 @@ let templates = {
     highlights: null,
 };
 // const getting = browser.storage.sync.get("filepath");
-function getOptions() {
-    return __awaiter(this, void 0, void 0, function* () {
-        const option_names = ["filepath",
-            "filename_extension",
-            "filename_template",
-            "frontmatter_template",
-            "highlight_template"];
-        const options = yield browser.storage.sync.get(option_names);
-        const template_strings = {
-            filename: options.filepath + options.filename_template + options.filename_extension,
-            frontmatter: options.frontmatter_template,
-            highlights: options.highlight_template,
-        };
-        return template_strings;
-    });
+async function getOptions() {
+    const option_names = ["filepath",
+        "filename_extension",
+        "filename_template",
+        "frontmatter_template",
+        "highlight_template"];
+    const options = await browser.storage.sync.get(option_names);
+    const template_strings = {
+        filename: options.filepath + options.filename_template + options.filename_extension,
+        frontmatter: options.frontmatter_template,
+        highlights: options.highlight_template,
+    };
+    return template_strings;
 }
 ;
 getOptions().then((template_strings) => {
@@ -81,15 +68,13 @@ function updateOptions(changes, _) {
 }
 ;
 browser.storage.onChanged.addListener(updateOptions);
-function renderNoteText(templates, note_data) {
-    return __awaiter(this, void 0, void 0, function* () {
-        let note = Object.create(templates);
-        let key;
-        for (key in templates) {
-            note[key] = yield engine.render(templates[key], note_data);
-        }
-        return note;
-    });
+async function renderNoteText(templates, note_data) {
+    let note = Object.create(templates);
+    let key;
+    for (key in templates) {
+        note[key] = await engine.render(templates[key], note_data);
+    }
+    return note;
 }
 ;
 function onCreated() {
@@ -126,13 +111,18 @@ port.onDisconnect.addListener((port) => {
 });
 browser.menus.onClicked.addListener((info, tab) => {
     if (info.menuItemId == "log-selection") {
+        const now = new Date();
+        const yyyy = now.getFullYear();
+        const mm = String(now.getMonth() + 1).padStart(2, '0');
+        const dd = String(now.getDate()).padStart(2, '0');
         const note_data = {
             title: tab === null || tab === void 0 ? void 0 : tab.title,
+            date: `${yyyy}-${mm}-${dd}`,
             url: tab === null || tab === void 0 ? void 0 : tab.url,
-            highlight_text: info.selectionText
+            highlight_text: info.selectionText,
         };
-        renderNoteText(templates, note_data).then(console.log);
-        // renderNoteText(templates, note_data).then(port.postMessage);
+        // renderNoteText(templates, note_data).then(console.log);
+        renderNoteText(templates, note_data).then(port.postMessage);
         // port.postMessage({title: tab?.title, text: info.selectionText});
         // console.log(info.selectionText);
         // const getting = browser.storage.sync.get("filepath");
