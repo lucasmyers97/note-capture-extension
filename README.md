@@ -10,14 +10,14 @@ Other than that it is fairly straightforward.
   - [ ] Hardcode template with highlight content, title, and author
   - [ ] Send to Python in some readable context (json?)
   - [ ] Have Python write or append an org file based on that data
-- [ ] Think about formatting titles as filenames better (eliminate non-alphanumeric letters)
+- [X] Think about formatting titles as filenames better (eliminate non-alphanumeric letters)
 - [ ] Get "author" and other metadata from html
 
 - [X] Figure out how to save data in an extension
 - [X] Figure out how to create a settings page
-- [ ] Create appropriate settings page (with the things one would need for the extension)
+- [X] Create appropriate settings page (with the things one would need for the extension)
 - [ ] Make extensions page pretty
-- [ ] Create extension menu (for saving metadata, save filepath, etc.)
+- [X] Create extension menu (for saving metadata, save filepath, etc.)
 - [ ] Figure out how to create popup prompt for user
 - [ ] Send org template through
 - [ ] Figure out what the one guy uses as metadata for literature notes

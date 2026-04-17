@@ -18,18 +18,98 @@ const filename_tpl = engine.parse(filename_str);
 const frontmatter_tpl = engine.parse(frontmatter_str);
 const highlights_tpl = engine.parse(highlights_str);
 
+interface TemplateStrings {
+  filename: string;
+  frontmatter: string;
+  highlights: string;
+}
+
+interface Templates {
+  filename: any;
+  frontmatter: any;
+  highlights: any;
+}
+
 interface NoteData {
   title: string | undefined;
   url: string | undefined;
   highlight_text: string | undefined;
+};
+
+interface Note {
+  filename: any;
+  frontmatter: any;
+  highlights: any;
 }
 
-async function render_note_text(note_data: NoteData) {
-  const filename = await engine.render(filename_tpl, note_data);
-  const frontmatter = await engine.render(frontmatter_tpl, note_data);
-  const highlights = await engine.render(highlights_tpl, note_data);
+async function parseTemplates(template_strings: TemplateStrings) {
+  let templates = Object.create(template_strings);
+  let key: keyof typeof template_strings;
+  for (key in template_strings) {
+    templates[key] = await engine.parse(template_strings[key]);
+  }
 
-  return {filename: filename, frontmatter: frontmatter, highlights: highlights};
+  return templates
+};
+
+let templates = {
+  filename: null,
+  frontmatter: null,
+  highlights: null,
+};
+
+// const getting = browser.storage.sync.get("filepath");
+async function getOptions() {
+  const option_names = ["filepath",
+                        "filename_extension",
+                        "filename_template",
+                        "frontmatter_template",
+                        "highlight_template"];
+  const options = await browser.storage.sync.get(option_names);
+
+  const template_strings = {
+    filename: options.filepath + options.filename_template + options.filename_extension,
+    frontmatter: options.frontmatter_template,
+    highlights: options.highlight_template,
+  };
+
+  return template_strings;
+};
+
+getOptions().then((template_strings) => {
+  parseTemplates(template_strings).then( (templates_) => {
+    templates = templates_;
+  });
+});
+
+function updateOptions(changes: any, _: string) {
+  const filepath = changes.filepath.newValue;
+  const filename_extension = changes.filename_extension.newValue;
+  const filename_template = changes.filename_template.newValue;
+  const frontmatter_template = changes.frontmatter_template.newValue;
+  const highlight_template = changes.highlight_template.newValue;
+
+  const template_strings = {
+    filename: filepath + filename_template + filename_extension,
+    frontmatter: frontmatter_template,
+    highlights: highlight_template,
+  };
+
+  parseTemplates(template_strings).then( (templates_) => {
+    templates = templates_;
+  })
+};
+
+browser.storage.onChanged.addListener(updateOptions);
+
+async function renderNoteText(templates: Templates, note_data: NoteData) {
+  let note = Object.create(templates);
+  let key: keyof typeof templates;
+  for (key in templates) {
+    note[key] = await engine.render(templates[key], note_data);
+  }
+
+  return note
 };
 
 function onCreated() {
@@ -69,10 +149,6 @@ port.onDisconnect.addListener((port) => {
   }
 });
 
-/*
- *
- */
-
 browser.menus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "log-selection") {
     const note_data = {
@@ -81,7 +157,8 @@ browser.menus.onClicked.addListener((info, tab) => {
       highlight_text: info.selectionText
     };
 
-    render_note_text(note_data).then(port.postMessage);
+    renderNoteText(templates, note_data).then(console.log);
+    // renderNoteText(templates, note_data).then(port.postMessage);
 
     // port.postMessage({title: tab?.title, text: info.selectionText});
     // console.log(info.selectionText);

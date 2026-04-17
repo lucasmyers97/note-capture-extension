@@ -24,12 +24,71 @@ const engine = new Liquid();
 const filename_tpl = engine.parse(filename_str);
 const frontmatter_tpl = engine.parse(frontmatter_str);
 const highlights_tpl = engine.parse(highlights_str);
-function render_note_text(note_data) {
+;
+function parseTemplates(template_strings) {
     return __awaiter(this, void 0, void 0, function* () {
-        const filename = yield engine.render(filename_tpl, note_data);
-        const frontmatter = yield engine.render(frontmatter_tpl, note_data);
-        const highlights = yield engine.render(highlights_tpl, note_data);
-        return { filename: filename, frontmatter: frontmatter, highlights: highlights };
+        let templates = Object.create(template_strings);
+        let key;
+        for (key in template_strings) {
+            templates[key] = yield engine.parse(template_strings[key]);
+        }
+        return templates;
+    });
+}
+;
+let templates = {
+    filename: null,
+    frontmatter: null,
+    highlights: null,
+};
+// const getting = browser.storage.sync.get("filepath");
+function getOptions() {
+    return __awaiter(this, void 0, void 0, function* () {
+        const option_names = ["filepath",
+            "filename_extension",
+            "filename_template",
+            "frontmatter_template",
+            "highlight_template"];
+        const options = yield browser.storage.sync.get(option_names);
+        const template_strings = {
+            filename: options.filepath + options.filename_template + options.filename_extension,
+            frontmatter: options.frontmatter_template,
+            highlights: options.highlight_template,
+        };
+        return template_strings;
+    });
+}
+;
+getOptions().then((template_strings) => {
+    parseTemplates(template_strings).then((templates_) => {
+        templates = templates_;
+    });
+});
+function updateOptions(changes, _) {
+    const filepath = changes.filepath.newValue;
+    const filename_extension = changes.filename_extension.newValue;
+    const filename_template = changes.filename_template.newValue;
+    const frontmatter_template = changes.frontmatter_template.newValue;
+    const highlight_template = changes.highlight_template.newValue;
+    const template_strings = {
+        filename: filepath + filename_template + filename_extension,
+        frontmatter: frontmatter_template,
+        highlights: highlight_template,
+    };
+    parseTemplates(template_strings).then((templates_) => {
+        templates = templates_;
+    });
+}
+;
+browser.storage.onChanged.addListener(updateOptions);
+function renderNoteText(templates, note_data) {
+    return __awaiter(this, void 0, void 0, function* () {
+        let note = Object.create(templates);
+        let key;
+        for (key in templates) {
+            note[key] = yield engine.render(templates[key], note_data);
+        }
+        return note;
     });
 }
 ;
@@ -65,9 +124,6 @@ port.onDisconnect.addListener((port) => {
         console.log(`Disconnected`, port);
     }
 });
-/*
- *
- */
 browser.menus.onClicked.addListener((info, tab) => {
     if (info.menuItemId == "log-selection") {
         const note_data = {
@@ -75,7 +131,8 @@ browser.menus.onClicked.addListener((info, tab) => {
             url: tab === null || tab === void 0 ? void 0 : tab.url,
             highlight_text: info.selectionText
         };
-        render_note_text(note_data).then(port.postMessage);
+        renderNoteText(templates, note_data).then(console.log);
+        // renderNoteText(templates, note_data).then(port.postMessage);
         // port.postMessage({title: tab?.title, text: info.selectionText});
         // console.log(info.selectionText);
         // const getting = browser.storage.sync.get("filepath");
