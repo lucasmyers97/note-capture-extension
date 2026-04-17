@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import os
 import sys
 import json
 import struct
@@ -34,7 +35,18 @@ def sendMessage(encodedMessage):
 
 while True:
     receivedMessage = getMessage()
-    messagebox.showinfo(receivedMessage['filename'], receivedMessage['highlights'])
-    messagebox.showinfo(receivedMessage['filename'], receivedMessage['frontmatter'])
+    filename = receivedMessage['filename']
+    frontmatter = receivedMessage['frontmatter']
+    highlights = receivedMessage['highlights']
+
+    file_exists = os.path.exists(filename)
+    with open(filename, 'a') as f:
+        if file_exists:
+            f.write(highlights + '\n')
+        else:
+            f.write(frontmatter + '\n\n' + highlights + '\n')
+
+    # messagebox.showinfo(receivedMessage['filename'], receivedMessage['highlights'])
+    # messagebox.showinfo(receivedMessage['filename'], receivedMessage['frontmatter'])
     if receivedMessage == "ping":
         sendMessage(encodeMessage("pong"))

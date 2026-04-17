@@ -139,7 +139,6 @@ browser.menus.onClicked.addListener((info, tab) => {
       return new Promise((resolve) => {
         const listener = (message: string, _: browser.runtime.MessageSender, __: any) => {
           browser.runtime.onMessage.removeListener(listener);
-          console.log(`Message is: ${message}`);
           resolve(message);
         }
         browser.runtime.onMessage.addListener(listener);
