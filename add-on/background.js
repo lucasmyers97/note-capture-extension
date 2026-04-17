@@ -90,13 +90,36 @@ browser.menus.onClicked.addListener((info, tab) => {
         const yyyy = now.getFullYear();
         const mm = String(now.getMonth() + 1).padStart(2, '0');
         const dd = String(now.getDate()).padStart(2, '0');
+        browser.windows.create({
+            url: "./popup.html",
+            type: "popup",
+            width: 400,
+            height: 400
+        });
+        function getPromisePopupMessage() {
+            return new Promise((resolve) => {
+                const listener = (message, _, __) => {
+                    browser.runtime.onMessage.removeListener(listener);
+                    console.log(`Message is: ${message}`);
+                    resolve(message);
+                };
+                browser.runtime.onMessage.addListener(listener);
+            });
+        }
+        async function waitForPopupMessage() {
+            return await getPromisePopupMessage();
+        }
         const note_data = {
             title: tab === null || tab === void 0 ? void 0 : tab.title,
             date: `${yyyy}-${mm}-${dd}`,
             url: tab === null || tab === void 0 ? void 0 : tab.url,
             highlight_text: info.selectionText,
+            highlight_note: '',
         };
-        renderNoteText(templates, note_data).then(port.postMessage);
+        waitForPopupMessage().then((message) => {
+            note_data.highlight_note = message;
+            renderNoteText(templates, note_data).then(port.postMessage);
+        });
     }
 });
 browser.action.onClicked.addListener(() => {
