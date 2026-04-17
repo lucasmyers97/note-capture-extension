@@ -3,20 +3,7 @@
 // @ts-ignore
 const Liquid = window.liquidjs.Liquid
 
-// const filename_template = '{{title|replace:",","_"|replace:":","_"|replace:"/","_"|replace:"\n","_"|replace:" ","_"|replace:"|","_"}}'
-// const filename_template = "{{title}}"
-const filename_str = '{{ title | slugify: "latin" | replace: "-" , "_" }}'
-const frontmatter_str = `#+title: {{ title }}
-#+date: {{ date }}{% if url %}
-#+url: {{ url }}{% endif %}`
-const highlights_str = `* {{ highlight_text | replace: '\n' : ' ' | truncate: 200 , "" | split: " " | pop | join: " " }}
-  - {{ highlight_text | replace: '\n' , ' '  }}{% if highlight_note %}
-  - Note: {{ highlight_note | replace: '\n' , ' ' }}{% endif %}`
-
 const engine = new Liquid();
-const filename_tpl = engine.parse(filename_str);
-const frontmatter_tpl = engine.parse(frontmatter_str);
-const highlights_tpl = engine.parse(highlights_str);
 
 interface TemplateStrings {
   filename: string;
@@ -59,7 +46,6 @@ let templates = {
   highlights: null,
 };
 
-// const getting = browser.storage.sync.get("filepath");
 async function getOptions() {
   const option_names = ["filepath",
                         "filename_extension",
@@ -121,21 +107,6 @@ function onCreated() {
   }
 }
 
-function onError(error: Error) {
-  console.log(`Error: ${error}`);
-}
-
-function onGot(item: any) {
-  let filepath = "No filepath";
-  if (item.filepath) {
-    filepath = item.filepath;
-  }
-  console.log(`Filepath: ${filepath}`);
-}
-
-const getting = browser.storage.sync.get("filepath");
-getting.then(onGot, onError);
-
 const port = browser.runtime.connectNative("org_capture");
 
 port.onMessage.addListener((response) => {
@@ -164,20 +135,11 @@ browser.menus.onClicked.addListener((info, tab) => {
       highlight_text: info.selectionText,
     };
 
-    // renderNoteText(templates, note_data).then(console.log);
     renderNoteText(templates, note_data).then(port.postMessage);
-
-    // port.postMessage({title: tab?.title, text: info.selectionText});
-    // console.log(info.selectionText);
-
-    // const getting = browser.storage.sync.get("filepath");
-    // getting.then(onGot, onError);
   }
 });
 
 browser.action.onClicked.addListener(() => {
-  // console.log("Sending:  ping");
-  // port.postMessage("ping");
   browser.runtime.openOptionsPage();
 });
 
