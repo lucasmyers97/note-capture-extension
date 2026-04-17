@@ -32,6 +32,7 @@ interface Templates {
 
 interface NoteData {
   title: string | undefined;
+  date: string | undefined;
   url: string | undefined;
   highlight_text: string | undefined;
 };
@@ -151,14 +152,20 @@ port.onDisconnect.addListener((port) => {
 
 browser.menus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "log-selection") {
+    const now = new Date();
+    const yyyy = now.getFullYear();
+    const mm = String(now.getMonth() + 1).padStart(2, '0');
+    const dd = String(now.getDate()).padStart(2, '0');
+
     const note_data = {
       title: tab?.title,
+      date: `${yyyy}-${mm}-${dd}`,
       url: tab?.url,
-      highlight_text: info.selectionText
+      highlight_text: info.selectionText,
     };
 
-    renderNoteText(templates, note_data).then(console.log);
-    // renderNoteText(templates, note_data).then(port.postMessage);
+    // renderNoteText(templates, note_data).then(console.log);
+    renderNoteText(templates, note_data).then(port.postMessage);
 
     // port.postMessage({title: tab?.title, text: info.selectionText});
     // console.log(info.selectionText);

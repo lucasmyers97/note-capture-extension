@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es6",
-        "lib": ["ES2015", "dom"],
+        "target": "es2017",
+        "lib": ["ES2017", "dom"],
         "types": ["firefox-webext-browser"]
     }
 }
