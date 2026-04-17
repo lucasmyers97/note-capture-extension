@@ -6,10 +6,10 @@ Other than that it is fairly straightforward.
 
 ## TODO
 
-- [ ] Output highlights to org files
-  - [ ] Hardcode template with highlight content, title, and author
-  - [ ] Send to Python in some readable context (json?)
-  - [ ] Have Python write or append an org file based on that data
+- [X] Output highlights to org files
+  - [X] Hardcode template with highlight content, title, and author
+  - [X] Send to Python in some readable context (json?)
+  - [X] Have Python write or append an org file based on that data
 - [X] Think about formatting titles as filenames better (eliminate non-alphanumeric letters)
 - [ ] Get "author" and other metadata from html
 
@@ -18,11 +18,20 @@ Other than that it is fairly straightforward.
 - [X] Create appropriate settings page (with the things one would need for the extension)
 - [ ] Make extensions page pretty
 - [X] Create extension menu (for saving metadata, save filepath, etc.)
-- [ ] Figure out how to create popup prompt for user
-- [ ] Send org template through
+- [X] Figure out how to create popup prompt for user
+- [X] Send org template through
 - [ ] Figure out what the one guy uses as metadata for literature notes
   - [Here's the link](https://gist.github.com/0atman/29daa5676a39388006e6c2e73e60f479)
 - [ ] Figure out how to read webpage metadata with extension
+
+- [ ] Figure out how to install more permanently
+- [ ] Fix issue with (potential lack of) trailing slash character
+- [ ] Allow user to just hit enter when filling in note
+- [ ] Give some sort of feedback (icon animation?) if filesave is successful
+- [ ] Potenially figure out highlight shortcut
+- [ ] Allow user to customize note buttons to add extra commentary (interesting, confusing, important, etc.)
+- [ ] Put together with webpack instead
+- [ ] Fix some coding convention issues with types
 
 ## Structure
 - Main extension
