@@ -1,0 +1,32 @@
+{
+  "description": "Native messaging example add-on",
+  "manifest_version": 3,
+  "name": "Native messaging example",
+  "version": "1.0",
+  "icons": {
+    "48": "icons/message.svg"
+  },
+
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "org_capture@example.org",
+      "strict_min_version": "50.0"
+    }
+  },
+
+  "background": {
+    "scripts": ["liquid.js", "background.js"],
+    "type": "module"
+  },
+
+  "action": {
+    "default_icon": "icons/message.svg"
+  },
+
+  "options_ui": {
+    "page": "options.html",
+    "open_in_tab": true
+  },
+
+  "permissions": ["nativeMessaging", "menus", "storage", "tabs"]
+}

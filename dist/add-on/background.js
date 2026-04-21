@@ -1,3 +1,6 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+
 // import { Liquid } from 'liquidjs'
 // import * as liquid from './liquid.js'
 // @ts-ignore
@@ -109,15 +112,19 @@ browser.menus.onClicked.addListener((info, tab) => {
             return await getPromisePopupMessage();
         }
         const note_data = {
-            title: tab === null || tab === void 0 ? void 0 : tab.title,
+            title: tab?.title,
             date: `${yyyy}-${mm}-${dd}`,
-            url: tab === null || tab === void 0 ? void 0 : tab.url,
+            url: tab?.url,
             highlight_text: info.selectionText,
             highlight_note: '',
         };
         waitForPopupMessage().then((message) => {
             note_data.highlight_note = message;
-            renderNoteText(templates, note_data).then(port.postMessage);
+            renderNoteText(templates, note_data).then((note) => {
+                console.log(note);
+                port.postMessage(note);
+            });
+            console.log("sent message");
         });
     }
 });
@@ -129,3 +136,6 @@ browser.menus.create({
     title: "Log selected text",
     contexts: ["selection"]
 }, onCreated);
+
+/******/ })()
+;

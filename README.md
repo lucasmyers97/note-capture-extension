@@ -33,6 +33,10 @@ Other than that it is fairly straightforward.
 - [ ] Put together with webpack instead
 - [ ] Fix some coding convention issues with types
 
+- [ ] Python: catch exceptions to keep running, output error to extension
+- [ ] Extension: get Python error messages, create popup
+- [ ] Extension: have options automatically load on entry (instead of having to click "save")
+
 ## Structure
 - Main extension
   - Menu option when highlighting text on screen 

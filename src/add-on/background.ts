@@ -159,7 +159,11 @@ browser.menus.onClicked.addListener((info, tab) => {
 
     waitForPopupMessage().then((message: string) => {
       note_data.highlight_note = message
-      renderNoteText(templates, note_data).then(port.postMessage);
+      renderNoteText(templates, note_data).then((note) => {
+        console.log(note);
+        port.postMessage(note);
+      });
+      console.log("sent message");
     });
   }
 });

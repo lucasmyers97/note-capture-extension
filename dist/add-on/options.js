@@ -1,3 +1,6 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+
 const filepath_default = '~/';
 const filename_extension_default = '.org';
 const filename_template_default = '{{ title | slugify: "latin" | replace: "-" , "_" }}';
@@ -46,3 +49,6 @@ function revertDefaultOptions(e) {
 document.addEventListener("DOMContentLoaded", restoreOptions);
 document.querySelector("form").addEventListener("submit", saveOptions);
 document.querySelector("form").addEventListener("reset", revertDefaultOptions);
+
+/******/ })()
+;

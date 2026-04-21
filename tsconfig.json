@@ -1,7 +1,14 @@
 {
-    "compilerOptions": {
-        "target": "es2017",
-        "lib": ["ES2017", "dom"],
-        "types": ["firefox-webext-browser"]
-    }
+  "compilerOptions": {
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "noImplicitAny": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "target": "esnext",
+    "lib": ["ES2017", "dom"],
+    "types": ["firefox-webext-browser"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules"]
 }

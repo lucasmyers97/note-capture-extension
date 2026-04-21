@@ -1,3 +1,6 @@
+/******/ (() => { // webpackBootstrap
+/******/ 	"use strict";
+
 function sendNote(e) {
     e.preventDefault();
     const note = document.querySelector("#note").value;
@@ -5,3 +8,6 @@ function sendNote(e) {
     close();
 }
 document.querySelector("form").addEventListener("submit", sendNote);
+
+/******/ })()
+;
