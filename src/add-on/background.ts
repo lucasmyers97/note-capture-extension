@@ -154,7 +154,7 @@ browser.menus.onClicked.addListener((info, tab) => {
     browser.windows.create({
       url: "./popup.html",
       type: "popup",
-      width: 400,
+      width: 650,
       height: 400
     });
 
