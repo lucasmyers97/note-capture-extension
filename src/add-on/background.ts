@@ -121,8 +121,8 @@ port.onMessage.addListener((response) => {
   browser.windows.create({
     url: "./error.html",
     type: "popup",
-    width: 1000,
-    height: 400
+    width: 600,
+    height: 300
   }).then(window => {
 
     const tabId = window!.tabs![0]!.id;

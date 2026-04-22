@@ -4,6 +4,13 @@ body {
   text-align: center;
 }
 
+.error-body {
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  align-items: center; /* vertical centering */
+  height: 95vh;
+}
+
 form {
     display: inline-block;
     margin-top: 1em;
@@ -97,4 +104,8 @@ button {
   font-size: 1em;
   font-family: Lato, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   padding: 0.5em;
+}
+
+.error-box {
+  display: inline-block;
 }
