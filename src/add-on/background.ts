@@ -1,8 +1,5 @@
 import { option_defaults } from "./default_options";
-// import { Liquid } from 'liquidjs'
-// import * as liquid from './liquid.js'
-// @ts-ignore
-const Liquid = window.liquidjs.Liquid;
+import { Liquid } from 'liquidjs'
 
 const engine = new Liquid();
 

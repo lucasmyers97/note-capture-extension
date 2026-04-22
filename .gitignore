@@ -1,9 +1,5 @@
 dist
 dist/**
-app/ping_pong.json
-add-on/background.js
 node_modules
 node_modules/**
-package.json
 package-lock.json
-add-on/nunjucks.d.ts
