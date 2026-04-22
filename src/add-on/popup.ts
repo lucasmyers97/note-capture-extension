@@ -7,3 +7,8 @@ function sendNote(e: Event) {
 }
 
 document.querySelector<HTMLElement>("form")!.addEventListener("submit", sendNote);
+document.querySelector<HTMLElement>("#note")!.focus();
+document.querySelector<HTMLElement>("#note")!.onkeydown = e => {
+  if (e.key !== "Enter") { return; }
+  sendNote(e);
+}
