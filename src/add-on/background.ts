@@ -22,17 +22,11 @@ interface NoteData {
   highlight_text: string | undefined;
 };
 
-interface Note {
-  filename: any;
-  frontmatter: any;
-  highlights: any;
-}
-
-async function parseTemplates(template_strings: TemplateStrings) {
+function parseTemplates(template_strings: TemplateStrings) {
   let templates = Object.create(template_strings);
   let key: keyof typeof template_strings;
   for (key in template_strings) {
-    templates[key] = await engine.parse(template_strings[key]);
+    templates[key] = engine.parse(template_strings[key]);
   }
 
   return templates
@@ -69,9 +63,7 @@ async function getOptions() {
 };
 
 getOptions().then((template_strings) => {
-  parseTemplates(template_strings).then( (templates_) => {
-    templates = templates_;
-  });
+  templates = parseTemplates(template_strings)
 });
 
 function updateOptions(changes: any, _: string) {
@@ -87,9 +79,7 @@ function updateOptions(changes: any, _: string) {
     highlights: highlight_template,
   };
 
-  parseTemplates(template_strings).then( (templates_) => {
-    templates = templates_;
-  })
+  templates = parseTemplates(template_strings)
 };
 
 browser.storage.onChanged.addListener(updateOptions);
