@@ -104,20 +104,12 @@ port.onDisconnect.addListener((port) => {
   }
 });
 
-// Create right-click menu item for logging notes
-function onCreated() {
-  if (browser.runtime.lastError) {
-    console.log(`Error: ${browser.runtime.lastError}`);
-  } else {
-    console.log("Item created successfully");
-  }
-}
-
+// Remove menu item if it exists, then create it for logging notes
+browser.menus.removeAll();
 browser.menus.create({
   id: "log-selection",
   title: "Log selected text",
-  contexts: ["selection"]
-}, onCreated);
+  contexts: ["selection"]});
 
 // If user clicks menu option, make popup, render note, send to script
 async function renderNoteText(templates: Templates, note_data: NoteData) {
@@ -169,10 +161,8 @@ browser.menus.onClicked.addListener((info, tab) => {
     waitForPopupMessage().then((message: string) => {
       note_data.highlight_note = message
       renderNoteText(templates, note_data).then((note) => {
-        console.log(note);
         port.postMessage(note);
       });
-      console.log("sent message");
     });
   }
 });
