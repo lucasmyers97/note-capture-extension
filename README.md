@@ -44,6 +44,7 @@ Other than that it is fairly straightforward.
 - [ ] Use Python to join paths so that there is no accidental appending
 - [ ] Use `esc` to cancel out of note
 - [ ] Keyboard shortcuts to bring up note
+- [ ] Fix template so it correctly cuts things off.
 
 ## Structure
 - Main extension
