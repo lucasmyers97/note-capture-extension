@@ -1,5 +1,5 @@
 import { option_defaults } from "./default_options";
-import { Liquid } from 'liquidjs'
+import { Liquid, Template } from 'liquidjs'
 
 const engine = new Liquid();
 
@@ -10,9 +10,9 @@ interface TemplateStrings {
 }
 
 interface Templates {
-  filename: any;
-  frontmatter: any;
-  highlights: any;
+  filename: Template[];
+  frontmatter: Template[];
+  highlights: Template[];
 }
 
 interface NoteData {
@@ -22,6 +22,13 @@ interface NoteData {
   highlight_text: string | undefined;
 };
 
+let templates = {
+  filename: <Template[]>[],
+  frontmatter: <Template[]>[],
+  highlights: <Template[]>[],
+};
+
+// Get options (or defaults) and parse templates with them
 function parseTemplates(template_strings: TemplateStrings) {
   let templates = Object.create(template_strings);
   let key: keyof typeof template_strings;
@@ -32,26 +39,8 @@ function parseTemplates(template_strings: TemplateStrings) {
   return templates
 };
 
-let templates = {
-  filename: null,
-  frontmatter: null,
-  highlights: null,
-};
-
 async function getOptions() {
-  const option_names = ["filepath",
-                        "filename_extension",
-                        "filename_template",
-                        "frontmatter_template",
-                        "highlight_template"];
-  let options = await browser.storage.sync.get(option_names);
-
-  if (Object.keys(options).length === 0) {
-    console.log("Options are empty");
-    options = option_defaults;
-  }
-
-  console.log(options);
+  let options = await browser.storage.sync.get(option_defaults);
 
   const template_strings = {
     filename: options.filepath + options.filename_template + options.filename_extension,
@@ -63,9 +52,10 @@ async function getOptions() {
 };
 
 getOptions().then((template_strings) => {
-  templates = parseTemplates(template_strings)
+  templates = parseTemplates(template_strings);
 });
 
+// Update templates if user updates options
 function updateOptions(changes: any, _: string) {
   const filepath = changes.filepath.newValue;
   const filename_extension = changes.filename_extension.newValue;
@@ -84,24 +74,7 @@ function updateOptions(changes: any, _: string) {
 
 browser.storage.onChanged.addListener(updateOptions);
 
-async function renderNoteText(templates: Templates, note_data: NoteData) {
-  let note = Object.create(templates);
-  let key: keyof typeof templates;
-  for (key in templates) {
-    note[key] = await engine.render(templates[key], note_data);
-  }
-
-  return note
-};
-
-function onCreated() {
-  if (browser.runtime.lastError) {
-    console.log(`Error: ${browser.runtime.lastError}`);
-  } else {
-    console.log("Item created successfully");
-  }
-}
-
+// Open connection with Python script, figure out what to do on error
 const port = browser.runtime.connectNative("org_capture");
 
 port.onMessage.addListener((response) => {
@@ -130,6 +103,32 @@ port.onDisconnect.addListener((port) => {
     console.log(`Disconnected`, port);
   }
 });
+
+// Create right-click menu item for logging notes
+function onCreated() {
+  if (browser.runtime.lastError) {
+    console.log(`Error: ${browser.runtime.lastError}`);
+  } else {
+    console.log("Item created successfully");
+  }
+}
+
+browser.menus.create({
+  id: "log-selection",
+  title: "Log selected text",
+  contexts: ["selection"]
+}, onCreated);
+
+// If user clicks menu option, make popup, render note, send to script
+async function renderNoteText(templates: Templates, note_data: NoteData) {
+  let note = Object.create(templates);
+  let key: keyof typeof templates;
+  for (key in templates) {
+    note[key] = await engine.render(templates[key], note_data);
+  }
+
+  return note
+};
 
 browser.menus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "log-selection") {
@@ -178,13 +177,7 @@ browser.menus.onClicked.addListener((info, tab) => {
   }
 });
 
+// Open options page if user clicks extension icon
 browser.action.onClicked.addListener(() => {
   browser.runtime.openOptionsPage();
 });
-
-browser.menus.create({
-  id: "log-selection",
-  title: "Log selected text",
-  contexts: ["selection"]
-}, onCreated);
-
