@@ -26,11 +26,11 @@ Other than that it is fairly straightforward.
 
 - [ ] Figure out how to install more permanently
 - [ ] Fix issue with (potential lack of) trailing slash character
-- [ ] Allow user to just hit enter when filling in note
+- [X] Allow user to just hit enter when filling in note
 - [ ] Give some sort of feedback (icon animation?) if filesave is successful
 - [ ] Potenially figure out highlight shortcut
 - [ ] Allow user to customize note buttons to add extra commentary (interesting, confusing, important, etc.)
-- [ ] Put together with webpack instead
+- [X] Put together with webpack instead
 - [ ] Fix some coding convention issues with types
 
 - [X] Python: catch exceptions to keep running, output error to extension
