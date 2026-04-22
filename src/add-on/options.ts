@@ -30,6 +30,8 @@ function saveOptions(e: Event) {
     options_storage[key] = query("#" + key)!.value;
   }
   browser.storage.sync.set(options_storage);
+
+  close();
 }
 
 function restoreOptions() {
@@ -53,6 +55,7 @@ function revertDefaultOptions(e: Event) {
   browser.storage.sync.set(option_defaults);
 
   restoreOptions();
+  close();
 }
 
 document.addEventListener("DOMContentLoaded", restoreOptions);
