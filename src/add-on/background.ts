@@ -1,7 +1,8 @@
+import { option_defaults } from "./default_options";
 // import { Liquid } from 'liquidjs'
 // import * as liquid from './liquid.js'
 // @ts-ignore
-const Liquid = window.liquidjs.Liquid
+const Liquid = window.liquidjs.Liquid;
 
 const engine = new Liquid();
 
@@ -52,7 +53,14 @@ async function getOptions() {
                         "filename_template",
                         "frontmatter_template",
                         "highlight_template"];
-  const options = await browser.storage.sync.get(option_names);
+  let options = await browser.storage.sync.get(option_names);
+
+  if (Object.keys(options).length === 0) {
+    console.log("Options are empty");
+    options = option_defaults;
+  }
+
+  console.log(options);
 
   const template_strings = {
     filename: options.filepath + options.filename_template + options.filename_extension,
