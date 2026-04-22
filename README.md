@@ -35,7 +35,9 @@ Other than that it is fairly straightforward.
 
 - [ ] Python: catch exceptions to keep running, output error to extension
 - [ ] Extension: get Python error messages, create popup
-- [ ] Extension: have options automatically load on entry (instead of having to click "save")
+- [X] Extension: have options automatically load on entry (instead of having to click "save")
+- [ ] Press enter on textbox to finish note
+- [ ] Automatically start cursor in textbox
 
 ## Structure
 - Main extension

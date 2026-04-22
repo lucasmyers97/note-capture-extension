@@ -12,7 +12,8 @@ const config: webpack.Configuration = {
   entry: {
     background: "./src/add-on/background.ts",
     popup: "./src/add-on/popup.ts",
-    options: "./src/add-on/options.ts"
+    options: "./src/add-on/options.ts",
+    error: "./src/add-on/error.ts",
   },
   module: {
     rules: [

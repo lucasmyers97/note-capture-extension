@@ -118,7 +118,22 @@ function onCreated() {
 const port = browser.runtime.connectNative("org_capture");
 
 port.onMessage.addListener((response) => {
-  console.log("Received: " + response);
+  browser.windows.create({
+    url: "./error.html",
+    type: "popup",
+    width: 1000,
+    height: 400
+  }).then(window => {
+
+    const tabId = window!.tabs![0]!.id;
+    // This makes sure tab is completely loaded before sending message
+    browser.tabs.onUpdated.addListener(function listener(id, info) {
+        if (id !== tabId || info.status !== 'complete') { return; }
+        browser.tabs.onUpdated.removeListener(listener);
+        browser.tabs.sendMessage(tabId, response);
+      });
+  });
+
 });
 
 port.onDisconnect.addListener((port) => {
