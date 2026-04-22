@@ -35,7 +35,7 @@ def sendMessage(encodedMessage):
 
 while True:
     receivedMessage = getMessage()
-    filename = receivedMessage['filename']
+    filename = os.path.expanduser(receivedMessage['filename'])
     frontmatter = receivedMessage['frontmatter']
     highlights = receivedMessage['highlights']
 
