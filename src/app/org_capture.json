@@ -1,7 +1,7 @@
 {
   "name": "org_capture",
   "description": "Example host for native messaging",
-  "path": "/home/lucas/Documents/coding/firefox-org-capture/app/org_capture.py",
+  "path": "/home/lucas/Documents/coding/firefox-org-capture/src/app/org_capture.py",
   "type": "stdio",
   "allowed_extensions": [ "org_capture@example.org" ]
 }
