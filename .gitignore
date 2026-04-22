@@ -1,3 +1,4 @@
+dist/**
 app/ping_pong.json
 add-on/background.js
 node_modules/**
