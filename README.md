@@ -38,6 +38,12 @@ Other than that it is fairly straightforward.
 - [X] Extension: have options automatically load on entry (instead of having to click "save")
 - [X] Press enter on textbox to finish note
 - [X] Automatically start cursor in textbox
+- [ ] Cancel button in note
+- [ ] Close tab on save of settings
+- [ ] Get rid of file extension in settings -- just include it in filename
+- [ ] Use Python to join paths so that there is no accidental appending
+- [ ] Use `esc` to cancel out of note
+- [ ] Keyboard shortcuts to bring up note
 
 ## Structure
 - Main extension
