@@ -34,19 +34,22 @@ def sendMessage(encodedMessage):
     sys.stdout.buffer.flush()
 
 while True:
-    receivedMessage = getMessage()
-    filename = os.path.expanduser(receivedMessage['filename'])
-    frontmatter = receivedMessage['frontmatter']
-    highlights = receivedMessage['highlights']
+    try: 
+        receivedMessage = getMessage()
+        filename = os.path.expanduser(receivedMessage['filename'])
+        frontmatter = receivedMessage['frontmatter']
+        highlights = receivedMessage['highlights']
 
-    file_exists = os.path.exists(filename)
-    with open(filename, 'a') as f:
-        if file_exists:
-            f.write(highlights + '\n')
-        else:
-            f.write(frontmatter + '\n\n' + highlights + '\n')
+        file_exists = os.path.exists(filename)
+        with open(filename, 'a') as f:
+            if file_exists:
+                f.write(highlights + '\n')
+            else:
+                f.write(frontmatter + '\n\n' + highlights + '\n')
 
-    # messagebox.showinfo(receivedMessage['filename'], receivedMessage['highlights'])
-    # messagebox.showinfo(receivedMessage['filename'], receivedMessage['frontmatter'])
-    if receivedMessage == "ping":
-        sendMessage(encodeMessage("pong"))
+        # messagebox.showinfo(receivedMessage['filename'], receivedMessage['highlights'])
+        # messagebox.showinfo(receivedMessage['filename'], receivedMessage['frontmatter'])
+        if receivedMessage == "ping":
+            sendMessage(encodeMessage("pong"))
+    except Exception as e:
+        sendMessage(encodeMessage(str(e)))
