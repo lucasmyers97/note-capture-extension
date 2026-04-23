@@ -46,6 +46,7 @@ Other than that it is fairly straightforward.
 - [X] Use `esc` to cancel out of note
 - [ ] Keyboard shortcuts to bring up note
 - [X] Fix template so it correctly cuts things off.
+- [ ] Fix LiquidJS if statements
 
 ## Structure
 - Main extension
