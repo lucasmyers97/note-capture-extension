@@ -131,13 +131,17 @@ browser.menus.onClicked.addListener((info, tab) => {
       height: 400
     });
 
-    function getPromisePopupMessage(): Promise<string> {
+    function getPromisePopupMessage(): Promise<{abort: boolean, note: string}> {
       return new Promise((resolve) => {
-        const listener = (message: string, _: browser.runtime.MessageSender, __: any) => {
-          browser.runtime.onMessage.removeListener(listener);
-          resolve(message);
-        }
-        browser.runtime.onMessage.addListener(listener);
+        const listener = (
+          message: {abort: boolean, note: string}, 
+          _: browser.runtime.MessageSender, 
+          __: any
+        ) => {
+            browser.runtime.onMessage.removeListener(listener);
+            resolve(message);
+          }
+          browser.runtime.onMessage.addListener(listener);
       })
     }
     
@@ -153,10 +157,11 @@ browser.menus.onClicked.addListener((info, tab) => {
       highlight_note: '',
     };
 
-    waitForPopupMessage().then((message: string) => {
-      note_data.highlight_note = message
+    waitForPopupMessage().then((message: {abort: boolean, note: string}) => {
+      if (message.abort) { return; }
+
+      note_data.highlight_note = message.note;
       renderNoteText(templates, note_data).then((note) => {
-        console.log(note);
         port.postMessage(note);
       });
     });

@@ -31,20 +31,21 @@ Other than that it is fairly straightforward.
 - [ ] Potenially figure out highlight shortcut
 - [ ] Allow user to customize note buttons to add extra commentary (interesting, confusing, important, etc.)
 - [X] Put together with webpack instead
-- [ ] Fix some coding convention issues with types
+- [X] Fix some coding convention issues with types
+- [ ] Make work on Windows
 
 - [X] Python: catch exceptions to keep running, output error to extension
 - [X] Extension: get Python error messages, create popup
 - [X] Extension: have options automatically load on entry (instead of having to click "save")
 - [X] Press enter on textbox to finish note
 - [X] Automatically start cursor in textbox
-- [ ] Cancel button in note
-- [ ] Close tab on save of settings
-- [ ] Get rid of file extension in settings -- just include it in filename
-- [ ] Use Python to join paths so that there is no accidental appending
-- [ ] Use `esc` to cancel out of note
+- [X] Cancel button in note
+- [X] Close tab on save of settings
+- [X] Get rid of file extension in settings -- just include it in filename
+- [X] Use Python to join paths so that there is no accidental appending
+- [X] Use `esc` to cancel out of note
 - [ ] Keyboard shortcuts to bring up note
-- [ ] Fix template so it correctly cuts things off.
+- [X] Fix template so it correctly cuts things off.
 
 ## Structure
 - Main extension

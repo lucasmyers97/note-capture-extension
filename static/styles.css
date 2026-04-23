@@ -90,6 +90,18 @@ button {
   background-color: #778485;
 }
 
+.cancel {
+  background-color: #e74c3c;
+}
+
+.cancel:hover {
+  background-color: #c44133;
+}
+
+.cancel:active {
+  background-color: #b93d30;
+}
+
 .buttons {
   display: flex;
   flex-direction: row;
