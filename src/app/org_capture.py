@@ -36,9 +36,10 @@ def sendMessage(encodedMessage):
 while True:
     try: 
         receivedMessage = getMessage()
-        filename = os.path.expanduser(receivedMessage['filename'])
+        filepath = os.path.expanduser(receivedMessage['filepath'])
+        filename = os.path.join(filepath, receivedMessage['filename'])
         frontmatter = receivedMessage['frontmatter']
-        highlights = receivedMessage['highlights']
+        highlights = receivedMessage['highlight']
 
         file_exists = os.path.exists(filename)
         with open(filename, 'a') as f:
@@ -47,9 +48,5 @@ while True:
             else:
                 f.write(frontmatter + '\n\n' + highlights + '\n')
 
-        # messagebox.showinfo(receivedMessage['filename'], receivedMessage['highlights'])
-        # messagebox.showinfo(receivedMessage['filename'], receivedMessage['frontmatter'])
-        if receivedMessage == "ping":
-            sendMessage(encodeMessage("pong"))
     except Exception as e:
         sendMessage(encodeMessage(str(e)))

@@ -4,12 +4,14 @@ import { Liquid, Template } from 'liquidjs'
 const engine = new Liquid();
 
 interface TemplateStrings {
+  filepath: string;
   filename: string;
   frontmatter: string;
   highlights: string;
 }
 
 interface Templates {
+  filepath: Template[];
   filename: Template[];
   frontmatter: Template[];
   highlights: Template[];
@@ -23,6 +25,7 @@ interface NoteData {
 };
 
 let templates = {
+  filepath: <Template[]>[],
   filename: <Template[]>[],
   frontmatter: <Template[]>[],
   highlights: <Template[]>[],
@@ -42,11 +45,10 @@ function parseTemplates(template_strings: TemplateStrings) {
 async function getOptions() {
   let options = await browser.storage.sync.get(option_defaults);
 
-  const template_strings = {
-    filename: options.filepath + options.filename_template + options.filename_extension,
-    frontmatter: options.frontmatter_template,
-    highlights: options.highlight_template,
-  };
+  let template_strings = Object.create(option_defaults);
+  for (const key in option_defaults) {
+    template_strings[key] = options[key];
+  }
 
   return template_strings;
 };
@@ -57,17 +59,10 @@ getOptions().then((template_strings) => {
 
 // Update templates if user updates options
 function updateOptions(changes: any, _: string) {
-  const filepath = changes.filepath.newValue;
-  const filename_extension = changes.filename_extension.newValue;
-  const filename_template = changes.filename_template.newValue;
-  const frontmatter_template = changes.frontmatter_template.newValue;
-  const highlight_template = changes.highlight_template.newValue;
-
-  const template_strings = {
-    filename: filepath + filename_template + filename_extension,
-    frontmatter: frontmatter_template,
-    highlights: highlight_template,
-  };
+  let template_strings = Object.create(option_defaults);
+  for (const key in option_defaults) {
+    template_strings[key] = changes[key].newValue;
+  }
 
   templates = parseTemplates(template_strings)
 };
@@ -161,6 +156,7 @@ browser.menus.onClicked.addListener((info, tab) => {
     waitForPopupMessage().then((message: string) => {
       note_data.highlight_note = message
       renderNoteText(templates, note_data).then((note) => {
+        console.log(note);
         port.postMessage(note);
       });
     });

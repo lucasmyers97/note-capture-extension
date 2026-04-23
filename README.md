@@ -25,7 +25,7 @@ Other than that it is fairly straightforward.
 - [ ] Figure out how to read webpage metadata with extension
 
 - [ ] Figure out how to install more permanently
-- [ ] Fix issue with (potential lack of) trailing slash character
+- [X] Fix issue with (potential lack of) trailing slash character
 - [X] Allow user to just hit enter when filling in note
 - [ ] Give some sort of feedback (icon animation?) if filesave is successful
 - [ ] Potenially figure out highlight shortcut
