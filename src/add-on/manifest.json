@@ -28,5 +28,14 @@
     "open_in_tab": true
   },
 
-  "permissions": ["nativeMessaging", "menus", "storage", "tabs", "notifications"]
+  "commands": {
+    "save-highlight": {
+      "suggested_key": {
+        "default": "Alt+Shift+N"
+      },
+      "description": "Save highlighted text in file"
+    }
+  },
+
+  "permissions": ["nativeMessaging", "menus", "storage", "tabs", "notifications", "activeTab", "scripting"]
 }

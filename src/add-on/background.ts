@@ -117,58 +117,99 @@ async function renderNoteText(templates: Templates, note_data: NoteData) {
   return note
 };
 
+function saveHighlight(selection_text: string | undefined, 
+                       tab: browser.tabs.Tab | undefined) {
+  const now = new Date();
+  const yyyy = now.getFullYear();
+  const mm = String(now.getMonth() + 1).padStart(2, '0');
+  const dd = String(now.getDate()).padStart(2, '0');
+
+  browser.windows.create({
+    url: "./popup.html",
+    type: "popup",
+    width: 650,
+    height: 400
+  });
+
+  function getPromisePopupMessage(): Promise<{abort: boolean, note: string}> {
+    return new Promise((resolve) => {
+      const listener = (
+        message: {abort: boolean, note: string}, 
+        _: browser.runtime.MessageSender, 
+        __: any
+      ) => {
+        browser.runtime.onMessage.removeListener(listener);
+        resolve(message);
+      }
+      browser.runtime.onMessage.addListener(listener);
+    })
+  }
+
+  async function waitForPopupMessage() {
+    return await getPromisePopupMessage();
+  }
+
+  const note_data = {
+    title: tab?.title,
+    date: `${yyyy}-${mm}-${dd}`,
+    url: tab?.url,
+    highlight_text: selection_text,
+    highlight_note: '',
+  };
+
+  waitForPopupMessage().then((message: {abort: boolean, note: string}) => {
+    if (message.abort) { return; }
+
+    note_data.highlight_note = message.note;
+    renderNoteText(templates, note_data).then((note) => {
+      port.postMessage(note);
+    });
+  });
+}
+
 browser.menus.onClicked.addListener((info, tab) => {
   if (info.menuItemId == "log-selection") {
-    const now = new Date();
-    const yyyy = now.getFullYear();
-    const mm = String(now.getMonth() + 1).padStart(2, '0');
-    const dd = String(now.getDate()).padStart(2, '0');
-
-    browser.windows.create({
-      url: "./popup.html",
-      type: "popup",
-      width: 650,
-      height: 400
-    });
-
-    function getPromisePopupMessage(): Promise<{abort: boolean, note: string}> {
-      return new Promise((resolve) => {
-        const listener = (
-          message: {abort: boolean, note: string}, 
-          _: browser.runtime.MessageSender, 
-          __: any
-        ) => {
-            browser.runtime.onMessage.removeListener(listener);
-            resolve(message);
-          }
-          browser.runtime.onMessage.addListener(listener);
-      })
-    }
-    
-    async function waitForPopupMessage() {
-      return await getPromisePopupMessage();
-    }
-
-    const note_data = {
-      title: tab?.title,
-      date: `${yyyy}-${mm}-${dd}`,
-      url: tab?.url,
-      highlight_text: info.selectionText,
-      highlight_note: '',
-    };
-
-    waitForPopupMessage().then((message: {abort: boolean, note: string}) => {
-      if (message.abort) { return; }
-
-      note_data.highlight_note = message.note;
-      renderNoteText(templates, note_data).then((note) => {
-        port.postMessage(note);
-      });
-    });
+    saveHighlight(info.selectionText, tab);
   }
 });
 
 // Open options page if user clicks extension icon
 browser.action.onClicked.addListener(() => {
   browser.runtime.openOptionsPage();
+});
+
+async function saveHighlightShortcut() {
+
+  const tabs = await browser.tabs.query({ currentWindow: true, active: true });
+  const tab = tabs[0];
+  if (!tab.id) { return; }
+
+  browser.scripting.executeScript({
+    target: { tabId: tab.id },
+    func: () => {
+      const selection_text = window.getSelection()?.toString();
+      browser.runtime.sendMessage(selection_text);
+    }
+  });
+
+  return tab;
+}
+
+browser.commands.onCommand.addListener((command) => {
+  if (command === "save-highlight") {
+    const tab = saveHighlightShortcut();
+
+    const listener = (
+      message: string, 
+      _: browser.runtime.MessageSender,
+      __: any
+    ) => {
+      browser.runtime.onMessage.removeListener(listener);
+      if (!message) { return; }
+      tab.then((tab) => {
+        saveHighlight(message, tab);
+      });
+    };
+    browser.runtime.onMessage.addListener(listener);
+  }
 });
