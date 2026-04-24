@@ -131,24 +131,6 @@ function saveHighlight(selection_text: string | undefined,
     height: 400
   });
 
-  function getPromisePopupMessage(): Promise<{abort: boolean, note: string}> {
-    return new Promise((resolve) => {
-      const listener = (
-        message: {abort: boolean, note: string}, 
-        _: browser.runtime.MessageSender, 
-        __: any
-      ) => {
-        browser.runtime.onMessage.removeListener(listener);
-        resolve(message);
-      }
-      browser.runtime.onMessage.addListener(listener);
-    })
-  }
-
-  async function waitForPopupMessage() {
-    return await getPromisePopupMessage();
-  }
-
   const note_data = {
     title: tab?.title,
     date: `${yyyy}-${mm}-${dd}`,
@@ -157,14 +139,22 @@ function saveHighlight(selection_text: string | undefined,
     highlight_note: '',
   };
 
-  waitForPopupMessage().then((message: {abort: boolean, note: string}) => {
+  const listener = (
+    message: {abort: boolean, note: string}, 
+    _: browser.runtime.MessageSender, 
+    __: any
+  ) => {
+    browser.runtime.onMessage.removeListener(listener);
+
     if (message.abort) { return; }
 
     note_data.highlight_note = message.note;
     renderNoteText(templates, note_data).then((note) => {
       port.postMessage(note);
     });
-  });
+  }
+
+  browser.runtime.onMessage.addListener(listener);
 }
 
 browser.menus.onClicked.addListener((info, tab) => {
