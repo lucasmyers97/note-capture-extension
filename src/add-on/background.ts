@@ -201,5 +201,7 @@ browser.commands.onCommand.addListener((command) => {
       });
     };
     browser.runtime.onMessage.addListener(listener);
+  } else if (command === "open-menu") {
+    browser.runtime.openOptionsPage();
   }
 });
