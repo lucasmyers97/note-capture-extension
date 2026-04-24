@@ -44,9 +44,12 @@ Other than that it is fairly straightforward.
 - [X] Get rid of file extension in settings -- just include it in filename
 - [X] Use Python to join paths so that there is no accidental appending
 - [X] Use `esc` to cancel out of note
-- [ ] Keyboard shortcuts to bring up note
+- [X] Keyboard shortcuts to bring up note
 - [X] Fix template so it correctly cuts things off.
 - [ ] Fix LiquidJS if statements
+- [ ] Allow user to customize shortcut keys
+- [ ] Allow user to create note without selecting text
+- [ ] Keyboard shortcut to allow options menu open.
 
 ## Structure
 - Main extension
