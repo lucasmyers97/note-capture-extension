@@ -1,0 +1,7 @@
+{
+  "name": "note_capture",
+  "description": "Native script for capturing notes from the browser",
+  "path": "/path/to/note_capture.py",
+  "type": "stdio",
+  "allowed_extensions": [ "note_capture@lucasmyers97.github.io" ]
+}

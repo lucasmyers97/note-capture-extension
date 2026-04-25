@@ -70,7 +70,7 @@ function updateOptions(changes: any, _: string) {
 browser.storage.onChanged.addListener(updateOptions);
 
 // Open connection with Python script, figure out what to do on error
-const port = browser.runtime.connectNative("org_capture");
+const port = browser.runtime.connectNative("note_capture");
 
 port.onMessage.addListener((response) => {
   browser.windows.create({

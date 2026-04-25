@@ -7,6 +7,6 @@ fi
 
 filepath="${filepath/#\~/$HOME}"
 
-cp ./src/app/org_capture.py $filepath
+cp ./src/app/note_capture.py $filepath
 
-sed "s|/path/to/|${filepath}/|g" ./src/app/org_capture.json > ~/.mozilla/native-messaging-hosts/org_capture.json
+sed "s|/path/to/|${filepath}/|g" ./src/app/note_capture.json > ~/.mozilla/native-messaging-hosts/note_capture.json

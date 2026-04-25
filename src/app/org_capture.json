@@ -1,7 +1,0 @@
-{
-  "name": "org_capture",
-  "description": "Example host for native messaging",
-  "path": "/path/to/org_capture.py",
-  "type": "stdio",
-  "allowed_extensions": [ "org_capture@example.org" ]
-}
