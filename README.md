@@ -1,70 +1,31 @@
-# Org Capture Extension
+# Note Capture Extension
 
-The purpose of this extension is to be able to highlight text on a webpage, and save it to an org file automatically.
-Ideally it will capture metadata in a way that the user can template, and will also prompt the user to add additional notes/context. 
-Other than that it is fairly straightforward.
+## Purpose
 
-## TODO
+This extension allows users to quickly save highlighted text in the browser to note files locally on their computer.
+The filename, filepath, and content of each note may be templated using [LiquidJS](https://liquidjs.com/) templates, which can incorporate metadata from the page (e.g. title, url, date), as well as the highlighted text and an optional highlight note that users may write.
 
-- [X] Output highlights to org files
-  - [X] Hardcode template with highlight content, title, and author
-  - [X] Send to Python in some readable context (json?)
-  - [X] Have Python write or append an org file based on that data
-- [X] Think about formatting titles as filenames better (eliminate non-alphanumeric letters)
-- [ ] Get "author" and other metadata from html
+## Usage
 
-- [X] Figure out how to save data in an extension
-- [X] Figure out how to create a settings page
-- [X] Create appropriate settings page (with the things one would need for the extension)
-- [ ] Make extensions page pretty
-- [X] Create extension menu (for saving metadata, save filepath, etc.)
-- [X] Figure out how to create popup prompt for user
-- [X] Send org template through
-- [ ] Figure out what the one guy uses as metadata for literature notes
-  - [Here's the link](https://gist.github.com/0atman/29daa5676a39388006e6c2e73e60f479)
-- [ ] Figure out how to read webpage metadata with extension
+Notes are taken by highlighting text on a page, and then right-clicking and selecting the "Log selected text" menu option.
+Additionally, a keyboard shortcut may be used (default `Alt-Shift-N` for "note") to save highlighted text.
+The options menu may be opened by clicking the browser extension icon, or by using a keyboard shortcut (default `Alt-Shift-M` for "menu").
+Options to be set are:
 
-- [ ] Figure out how to install more permanently
-- [X] Fix issue with (potential lack of) trailing slash character
-- [X] Allow user to just hit enter when filling in note
-- [ ] Give some sort of feedback (icon animation?) if filesave is successful
-- [ ] Potenially figure out highlight shortcut
-- [ ] Allow user to customize note buttons to add extra commentary (interesting, confusing, important, etc.)
-- [X] Put together with webpack instead
-- [X] Fix some coding convention issues with types
-- [ ] Make work on Windows
+ - *Filepath template*: Template specifying the path at which the note will be saved.
+ - *Filename template*: Template specifying the name of the note file.
+ - *Frontmatter template*: Template specifying which text will be displayed at the top of the note file. 
+ Note that the frontmatter is only rendered for the first highlight in a note file. 
+ Subsequent notes which share a filepath and filename will only append the output of the *Highlight template* at the end of the file.
+ - Highlight template: Template specifying the text content of each of the highlights in the note file.
 
-- [X] Python: catch exceptions to keep running, output error to extension
-- [X] Extension: get Python error messages, create popup
-- [X] Extension: have options automatically load on entry (instead of having to click "save")
-- [X] Press enter on textbox to finish note
-- [X] Automatically start cursor in textbox
-- [X] Cancel button in note
-- [X] Close tab on save of settings
-- [X] Get rid of file extension in settings -- just include it in filename
-- [X] Use Python to join paths so that there is no accidental appending
-- [X] Use `esc` to cancel out of note
-- [X] Keyboard shortcuts to bring up note
-- [X] Fix template so it correctly cuts things off.
-- [ ] Fix LiquidJS if statements
-- [ ] Allow user to customize shortcut keys
-- [ ] Allow user to create note without selecting text
-- [ ] Keyboard shortcut to allow options menu open.
+The variables able to be used in the templates are `title`, `date`, `url`, `highlight_text`, and `highlight_note`. 
+See the [LiquidJS documentation](https://liquidjs.com/tutorials/intro-to-liquid.html) for guidance on using templates.
 
-## Structure
-- Main extension
-  - Menu option when highlighting text on screen 
-  - Popup (?) prompting user for additional note on reference material
-  - Grab metadata from document
-  - Process highlight, user text, and metadata into note + filename
-  - Send info to external program
-- Options page
-  - Create (nice-looking) page for user to specify option
-  - Have fields specifying how the text should be output
-  - Deal with logic of saving user preferences
-- Prompt
-  - Prompt users to open settings page
-- Python script
-  - Receive note text
-  - Create new file or find file to write to
-  - Depending on whether file is new or not, create title matter, or just append
+## Installation
+
+Browser extensions may not directly write to a user's filesystem, so a program which interacts with the extension must be locally installed. 
+On Linux, this can be done via the terminal `./install.sh`, or with a GUI helper.
+In the latter case, double-click `install_gui.sh` in your file browser.
+In both cases, only the desired installation directory is needed as input.
+After the local program is installed, just install the extension from the Firefox add-ons page.
